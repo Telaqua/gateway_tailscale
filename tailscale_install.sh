@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #DOWNLOAD_SERVER="https://download.telaqua.fr"
-DOWNLOAD_SERVER="https://raw.githubusercontent.com/mickalaqua/gateway_scaleway/main/release"
+DOWNLOAD_SERVER="https://raw.githubusercontent.com/mickalaqua/gateway_scaleway/dev/release"
 
 # extract the gateway information
 gateway_model_name=$(uci show einfo.dev.name | grep -o "'[^']*'" | sed "s/'//g")
@@ -11,6 +11,13 @@ gateway_hostname=$HOSTNAME
 echo "gateway hostname $gateway_hostname"
 echo "gateway eui $gateway_eui"
 echo "gateway model name $gateway_model_name"
+
+# When the model name not found using uci, it means that it should be a RAK7289C or RAK7249
+# Check the model name using einfo
+if [ -z "$gateway_model_name" ]; then
+    gateway_model_name="$(einfo show | grep DEV_NAME | grep -o "'[^']*'" | sed "s/'//g")"
+    gateway_eui="$(einfo show | grep GATEWAY_EUI | grep -o "'[^']*'" | sed "s/'//g")"
+fi
 
 if [[ "$gateway_model_name" == "RAK7289C" || "$gateway_model_name" == "RAK7249" ]]; then
     echo "Using RAMIPS architecture and using sd card to store the tailscale"
