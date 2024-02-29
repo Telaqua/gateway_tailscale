@@ -12,16 +12,16 @@ echo "gateway hostname $gateway_hostname"
 echo "gateway eui $gateway_eui"
 echo "gateway model name $gateway_model_name"
 
-if [[ "$GATEWAY_MODEL" == "RAK7289C" || "$GATEWAY_MODEL" == "RAK7249" ]]; then
+if [[ "$gateway_model_name" == "RAK7289C" || "$gateway_model_name" == "RAK7249" ]]; then
     echo "Using RAMIPS architecture and using sd card to store the tailscale"
     TAILSCALE_PACKET_NAME="tailscale_1.58.2-1_ramips_24kec.ipk"
     TAILSCALE_BINARY_PATH="/mnt/mmcblk0p1/tailscale/"
-elif [[ "$GATEWAY_MODEL" == "RAK7289CV2" ]]; then
+elif [[ "$gateway_model_name" == "RAK7289CV2" ]]; then
    echo "Using MIPSEL architecture and using flash to store the tailscale"
     TAILSCALE_PACKET_NAME="tailscale_1.58.2-1_mipsel_24kc.ipk"
     TAILSCALE_BINARY_PATH="/etc/tailscale/"
 else 
-    echo "Invalid model name (GATEWAY_MODEL) $GATEWAY_MODEL"
+    echo "Invalid model name (GATEWAY_MODEL) $gateway_model_name"
     exit 1
 fi
 
