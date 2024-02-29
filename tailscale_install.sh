@@ -20,14 +20,22 @@ echo "gateway hostname $gateway_hostname"
 echo "gateway eui $gateway_eui"
 echo "gateway model name $gateway_model_name"
 
+# the gateway architecture also depend of the firmware version
+# I beleive that version before 2.2.x use arch ramips_24kec
+# version 2.2.x use arch mipsel_24kc
+arch=$(opkg print-architecture | sed -n 's/.* \([^ ]*mips[^ ]*\) .*/\1/p')
+TAILSCALE_PACKET_NAME="tailscale_1.58.2-1_$arch.ipk"
+
 if [[ "$gateway_model_name" == "RAK7289C" || "$gateway_model_name" == "RAK7249" ]]; then
     echo "Using RAMIPS architecture and using sd card to store the tailscale"
-    TAILSCALE_PACKET_NAME="tailscale_1.58.2-1_ramips_24kec.ipk"
     TAILSCALE_BINARY_PATH="/mnt/mmcblk0p1/tailscale"
+    TAILSCALE_SERVER_BINARY_NAME="tailscale.combined.v1.60.0"
 elif [[ "$gateway_model_name" == "RAK7289CV2" ]]; then
    echo "Using MIPSEL architecture and using flash to store the tailscale"
-    TAILSCALE_PACKET_NAME="tailscale_1.58.2-1_mipsel_24kc.ipk"
     TAILSCALE_BINARY_PATH="/etc/tailscale"
+
+    # This binary is compiled using GOMIPS=softfloat option
+    TAILSCALE_SERVER_BINARY_NAME="tailscale.combined.v1.60.0-softfloat"
 else 
     echo "Invalid model name (GATEWAY_MODEL) $gateway_model_name"
     exit 1
@@ -42,7 +50,7 @@ echo "Downloading packet $TAILSCALE_PACKET_NAME"
 wget -P /mnt/mmcblk0p1/tailscale $DOWNLOAD_SERVER/$TAILSCALE_PACKET_NAME
 
 TAILSCALE_BINARY_NAME="tailscale.combined"
-TAILSCALE_SERVER_BINARY_NAME="tailscale.combined.v1.60.0"
+
 
 # delete old binary, in case it already exist
 rm $TAILSCALE_BINARY_PATH/$TAILSCALE_BINARY_NAME
@@ -51,8 +59,8 @@ rm /mnt/mmcblk0p1/tailscale/$TAILSCALE_SERVER_BINARY_NAME
 
 mkdir -p $TAILSCALE_BINARY_PATH
 
-# for some reasons it is not possible to download the binary inside /etc/tailscale
-# first download the binary to the sd card, then move it to /etc/tailscale
+# Downloading the binary on the flash is longer than downloading it on SD Card and
+# then moving it on flash memory
 echo "Downloading binary $TAILSCALE_BINARY_NAME to $TAILSCALE_BINARY_PATH"
 wget -P /mnt/mmcblk0p1/tailscale/ $DOWNLOAD_SERVER/$TAILSCALE_SERVER_BINARY_NAME 
 
