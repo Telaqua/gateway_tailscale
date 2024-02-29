@@ -1,11 +1,16 @@
 #!/bin/sh
 
-DOWNLOAD_SERVER="https://download.telaqua.fr"
+#DOWNLOAD_SERVER="https://download.telaqua.fr"
+DOWNLOAD_SERVER="https://raw.githubusercontent.com/mickalaqua/gateway_scaleway/main/release"
 
 # extract the gateway information
 gateway_model_name=$(uci show einfo.dev.name | grep -o "'[^']*'" | sed "s/'//g")
 gateway_eui=$(uci show einfo.dev.gw_eui | grep -o "'[^']*'" | sed "s/'//g")
 gateway_hostname=$HOSTNAME
+
+echo "gateway hostname $gateway_hostname"
+echo "gateway eui $gateway_eui"
+echo "gateway model name $gateway_model_name"
 
 if [[ "$GATEWAY_MODEL" == "RAK7289C" || "$GATEWAY_MODEL" == "RAK7249" ]]; then
     echo "Using RAMIPS architecture and using sd card to store the tailscale"
@@ -20,11 +25,17 @@ else
     exit 1
 fi
 
-TAILSCALE_BINARY_NAME="tailscale.combined"
+
+
+
 echo "Downloading packet $PACKET_NAME"
 wget -P /mnt/mmcblk0p1/tailscale $DOWNLOAD_SERVER/$PACKET_NAME
+
+TAILSCALE_BINARY_NAME="tailscale.combined"
+TAILSCALE_SERVER_BINARY_NAME="tailscale.combined.v1.60.0"
 echo "Downloading binary $TAILSCALE_BINARY_NAME to $TAILSCALE_BINARY_PATH"
-wget -P $TAILSCALE_BINARY_PATH $DOWNLOAD_SERVER/$TAILSCALE_BINARY_NAME
+wget -P $TAILSCALE_BINARY_PATH $DOWNLOAD_SERVER/$TAILSCALE_SERVER_BINARY_NAME -O $TAILSCALE_BINARY_NAME
+
 
 echo "Installing packet $PACKET_NAME"
 opkg install /mnt/mmcblk0p1/tailscale/$TAILSCALE_PACKET_NAME
