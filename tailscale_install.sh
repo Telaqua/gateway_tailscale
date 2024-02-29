@@ -15,8 +15,8 @@ echo "gateway model name $gateway_model_name"
 # When the model name not found using uci, it means that it should be a RAK7289C or RAK7249
 # Check the model name using einfo
 if [ -z "$gateway_model_name" ]; then
-    gateway_model_name="$(einfo show | grep DEV_NAME | grep -o "'[^']*'" | sed "s/'//g")"
-    gateway_eui="$(einfo show | grep GATEWAY_EUI | grep -o "'[^']*'" | sed "s/'//g")"
+    gateway_model_name="$(einfo show | grep DEV_NAME | sed 's/.*"\([^"]*\)".*/\1/')"
+    gateway_eui="$(einfo show | grep GATEWAY_EUI | sed 's/.*"\([^"]*\)".*/\1/')"
 fi
 
 if [[ "$gateway_model_name" == "RAK7289C" || "$gateway_model_name" == "RAK7249" ]]; then
