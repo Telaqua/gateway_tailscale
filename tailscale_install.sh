@@ -23,7 +23,7 @@ echo "gateway model name $gateway_model_name"
 if [[ "$gateway_model_name" == "RAK7289C" || "$gateway_model_name" == "RAK7249" ]]; then
     echo "Using RAMIPS architecture and using sd card to store the tailscale"
     TAILSCALE_PACKET_NAME="tailscale_1.58.2-1_ramips_24kec.ipk"
-    TAILSCALE_BINARY_PATH="/mnt/mmcblk0p1/tailscale/"
+    TAILSCALE_BINARY_PATH="/mnt/mmcblk0p1/tailscale"
 elif [[ "$gateway_model_name" == "RAK7289CV2" ]]; then
    echo "Using MIPSEL architecture and using flash to store the tailscale"
     TAILSCALE_PACKET_NAME="tailscale_1.58.2-1_mipsel_24kc.ipk"
@@ -50,8 +50,8 @@ rm /mnt/mmcblk0p1/tailscale/$TAILSCALE_PACKET_NAME
 # As side effect the packet installation will create
 # some files for /usr/bin/tailscale and  /usr/bin/tailscaled
 echo "Remove initial files /usr/bin/tailscale[d]"
-rm /usr/bin/tailscale
-rm /usr/bin/tailscaled
+rm /usr/sbin/tailscale
+rm /usr/sbin/tailscaled
 
 echo "Linking binaries to $TAILSCALE_BINARY_PATH/$TAILSCALE_BINARY_NAME"
 ln -s "$TAILSCALE_BINARY_PATH/$TAILSCALE_BINARY_NAME" /usr/sbin/tailscaled
@@ -67,7 +67,13 @@ echo "Starting tailscale"
 # env variable
 if [ "$TAILSCALE_TOKEN" ]; then
     echo "TAILSCALE_TOKEN defined, authentication in progress ..."
-    tailscale_hostname="$gateway_eui"-"$gateway_hostname"
+    
+
+    # Replace underscores with dashes 
+    # as underscore are not allowed in dns name
+    gateway_hostname="${gateway_hostname//_/\-}"
+
+    tailscale_hostname="$gateway_eui"."$gateway_hostname"
     echo "Add the device $tailscale_hostname to the network"
     tailscale up --hostname="$tailscale_hostname" --authkey="$TAILSCALE_TOKEN" --ssh
 else
