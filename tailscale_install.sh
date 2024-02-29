@@ -34,11 +34,19 @@ else
 fi
 
 mkdir -p /mnt/mmcblk0p1/tailscale
+
+# delete old packet, in case it already exist
+rm /mnt/mmcblk0p1/tailscale/$TAILSCALE_PACKET_NAME
+
 echo "Downloading packet $TAILSCALE_PACKET_NAME"
 wget -P /mnt/mmcblk0p1/tailscale $DOWNLOAD_SERVER/$TAILSCALE_PACKET_NAME
 
 TAILSCALE_BINARY_NAME="tailscale.combined"
 TAILSCALE_SERVER_BINARY_NAME="tailscale.combined.v1.60.0"
+
+# delete old binary, in case it already exist
+rm $TAILSCALE_BINARY_PATH/$TAILSCALE_BINARY_NAME
+rm $TAILSCALE_BINARY_PATH/$TAILSCALE_SERVER_BINARY_NAME
 
 mkdir -p $TAILSCALE_BINARY_PATH
 echo "Downloading binary $TAILSCALE_BINARY_NAME to $TAILSCALE_BINARY_PATH"
