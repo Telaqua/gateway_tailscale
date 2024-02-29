@@ -71,7 +71,7 @@ if [ "$TAILSCALE_TOKEN" ]; then
 
     # Replace underscores with dashes 
     # as underscore are not allowed in dns name
-    gateway_hostname="${gateway_hostname//_/\-}"
+    gateway_hostname="${gateway_hostname//_/-}"
 
     tailscale_hostname="$gateway_eui"."$gateway_hostname"
     echo "Add the device $tailscale_hostname to the network"
