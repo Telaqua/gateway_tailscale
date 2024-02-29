@@ -27,14 +27,14 @@ if [[ "$gateway_model_name" == "RAK7289C" || "$gateway_model_name" == "RAK7249" 
 elif [[ "$gateway_model_name" == "RAK7289CV2" ]]; then
    echo "Using MIPSEL architecture and using flash to store the tailscale"
     TAILSCALE_PACKET_NAME="tailscale_1.58.2-1_mipsel_24kc.ipk"
-    TAILSCALE_BINARY_PATH="/etc/tailscale/"
+    TAILSCALE_BINARY_PATH="/etc/tailscale"
 else 
     echo "Invalid model name (GATEWAY_MODEL) $gateway_model_name"
     exit 1
 fi
 
-echo "Downloading packet $PACKET_NAME"
-wget -P /mnt/mmcblk0p1/tailscale $DOWNLOAD_SERVER/$PACKET_NAME
+echo "Downloading packet $TAILSCALE_PACKET_NAME"
+wget -P /mnt/mmcblk0p1/tailscale $DOWNLOAD_SERVER/$TAILSCALE_PACKET_NAME
 
 TAILSCALE_BINARY_NAME="tailscale.combined"
 TAILSCALE_SERVER_BINARY_NAME="tailscale.combined.v1.60.0"
@@ -43,7 +43,7 @@ wget -P $TAILSCALE_BINARY_PATH $DOWNLOAD_SERVER/$TAILSCALE_SERVER_BINARY_NAME
 mv $TAILSCALE_BINARY_PATH/$TAILSCALE_SERVER_BINARY_NAME $TAILSCALE_BINARY_PATH/$TAILSCALE_BINARY_NAME
 
 
-echo "Installing packet $PACKET_NAME"
+echo "Installing packet $TAILSCALE_PACKET_NAME"
 opkg install /mnt/mmcblk0p1/tailscale/$TAILSCALE_PACKET_NAME
 rm /mnt/mmcblk0p1/tailscale/$TAILSCALE_PACKET_NAME
 
