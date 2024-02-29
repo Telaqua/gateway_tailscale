@@ -47,11 +47,16 @@ TAILSCALE_SERVER_BINARY_NAME="tailscale.combined.v1.60.0"
 # delete old binary, in case it already exist
 rm $TAILSCALE_BINARY_PATH/$TAILSCALE_BINARY_NAME
 rm $TAILSCALE_BINARY_PATH/$TAILSCALE_SERVER_BINARY_NAME
+rm /mnt/mmcblk0p1/tailscale/$TAILSCALE_SERVER_BINARY_NAME
 
 mkdir -p $TAILSCALE_BINARY_PATH
+
+# for some reasons it is not possible to download the binary inside /etc/tailscale
+# first download the binary to the sd card, then move it to /etc/tailscale
 echo "Downloading binary $TAILSCALE_BINARY_NAME to $TAILSCALE_BINARY_PATH"
-wget -P $TAILSCALE_BINARY_PATH $DOWNLOAD_SERVER/$TAILSCALE_SERVER_BINARY_NAME 
-mv $TAILSCALE_BINARY_PATH/$TAILSCALE_SERVER_BINARY_NAME $TAILSCALE_BINARY_PATH/$TAILSCALE_BINARY_NAME
+wget -P /mnt/mmcblk0p1/tailscale/ $DOWNLOAD_SERVER/$TAILSCALE_SERVER_BINARY_NAME 
+
+mv /mnt/mmcblk0p1/tailscale/$TAILSCALE_SERVER_BINARY_NAME $TAILSCALE_BINARY_PATH/$TAILSCALE_BINARY_NAME
 
 
 echo "Installing packet $TAILSCALE_PACKET_NAME"
