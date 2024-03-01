@@ -1,7 +1,6 @@
 #!/bin/sh
 
-#DOWNLOAD_SERVER="https://download.telaqua.fr"
-DOWNLOAD_SERVER="https://raw.githubusercontent.com/mickalaqua/gateway_scaleway/dev/release"
+DOWNLOAD_SERVER="https://raw.githubusercontent.com/Telaqua/gateway_tailscale/main/release"
 
 # extract the gateway information
 gateway_model_name=$(uci show einfo.dev.name | grep -o "'[^']*'" | sed "s/'//g")
