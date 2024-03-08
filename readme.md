@@ -19,7 +19,7 @@ Ensuite, télécharger le script sur la gateway et l'exécuter en lui passant la
 ```bash
 gateway$ wget https://raw.githubusercontent.com/Telaqua/gateway_tailscale/main/tailscale_install.sh
 gateway$ chmod +x tailscale_install.sh
-gateway$ env TAILSCALE_TOKEN=<tailscale_key> ./tailscale_install.sh
+gateway$ TAILSCALE_TOKEN=<tailscale_key> ./tailscale_install.sh
 ```
 
 Remplacer <tailscale_key> par la clé Tailscale.
