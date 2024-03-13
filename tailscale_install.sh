@@ -1,6 +1,11 @@
 #!/bin/sh
 
-DOWNLOAD_SERVER="https://raw.githubusercontent.com/Telaqua/gateway_tailscale/main/release"
+if [ -z "${GIT_BRANCH}" ]; then
+    GIT_BRANCH="main"
+fi
+
+echo "Using git branch $GIT_BRANCH"
+DOWNLOAD_SERVER="https://raw.githubusercontent.com/Telaqua/gateway_tailscale/$GIT_BRANCH/release"
 
 # extract the gateway information
 gateway_model_name=$(uci show einfo.dev.name | grep -o "'[^']*'" | sed "s/'//g")
